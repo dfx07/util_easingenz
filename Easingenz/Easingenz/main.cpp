@@ -1,6 +1,7 @@
 ﻿
 #include <GLWindow.h>
 #include <GLEasing.h>
+#include <GLSp.h>
 
 
 bool bfirst = true;
@@ -8,21 +9,23 @@ glm::mat4   matView;
 glm::mat4   matProject;
 float zoom = 1.0f;
 
+float startpox = -300.f;
+float endpox   =  300.f;
+
+
+EasingBack animationBack;
+
+EasingBase* animation;
+
+
+bool bCheck = false;
+glm::vec3 pos = { startpox, 0.f, 100.f };
+
 MenuContext* menucontext;
 
-void OpenFile(Window* win, Control* mn)
+void btnclick(Window* win, Button* mn)
 {
-    MessageBox(NULL, "OpenFile", "Thong bao", MB_ICONWARNING);
-}
-
-void SaveFile(Window* win, Control* mn)
-{
-    MessageBox(NULL, "SaveFile", "Thong bao", MB_ICONWARNING);
-}
-
-void OnButton(Window* win, Control* btn)
-{
-    MessageBox(NULL, "ON button", "Thong bao", MB_ICONWARNING);
+    animationBack.Start();
 }
 
 
@@ -40,44 +43,17 @@ void Create(Window* win)
     glViewport(0, 0, width, height);
     matProject = glm::ortho(left, right, top, bottom, double(0.1), double(-1000));
 
-    MenuItemBase item;
-    MenuBar* menubar = new MenuBar();
+    Button* btn = new Button();
+    btn->SetPosition(0, 0);
+    btn->SetEvent(btnclick);
+    btn->SetSize(100, 50);
+    btn->SetLabel("Click");
 
-    MenuBarItem menubaritem("File");
 
-    item.SetLabel("Open file");
-    item.SetType(MF_STRING);
-    item.SetEvent(OpenFile);
-    menubaritem.AddItem(item);
+    animationBack.Setup(EaseMode::Out, startpox, endpox, 2.f);
+    animation = &animationBack;
 
-    item.SetType(MF_SEPARATOR);
-    menubaritem.AddItem(item);
-
-    item.SetLabel("Save file");
-    item.SetType(MF_STRING);
-    item.SetEvent(OpenFile);
-    menubaritem.AddItem(item);
-
-    menubar->AddItem(menubaritem);
-
-    menubaritem.SetText("Edit");
-
-    item.SetLabel("Create connect");
-    item.SetType(MF_STRING);
-    item.SetEvent(OpenFile);
-    menubaritem.AddItem(item);
-
-    item.SetType(MF_SEPARATOR);
-    menubaritem.AddItem(item);
-
-    item.SetLabel("Save file");
-    item.SetType(MF_STRING);
-    item.SetEvent(OpenFile);
-    menubaritem.AddItem(item);
-
-    menubar->AddItem(menubaritem);
-
-    win->AddControl(menubar);
+    win->AddControl(btn);
 }
 
 void MouseButton(Window* win)
@@ -124,15 +100,7 @@ void Draw(Window* win)
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(glm::value_ptr(matView));
 
-    glBegin(GL_TRIANGLES);
-
-    glColor3f(0.5, 1.0, 0);
-
-    glVertex3f(100.0, 100.0, 100.0);
-    glVertex3f(0.0, 100.0, 100.0);
-    glVertex3f(100.0, 0.0, 100.0);
-
-    glEnd();
+    glsp::glDrawPoint(pos, GL_COLOR_RED, 100.f);
 }
 
 void Resize(Window* win)
@@ -148,38 +116,45 @@ void Resize(Window* win)
 
 void Process(Window * pWin)
 {
+    float t = pWin->GetTimeElapsed();
+
+    if (animation->IsActive())
+    {
+        pos.x = animation->Excute(t);
+    }
+}
+
+int main()
+{
+    GLWindow window;
+
+    Window *win1 = new Window("Easingenz", 100, 100, 800, 640);
+    win1->SetOnDrawfunc(Draw);
+    win1->SetFont("Arial", 15);
+    win1->SetOnCreatedfunc(Create);
+    win1->SetOnMouseButtonfunc(MouseButton);
+    win1->SetProcessfunc(Process);
+    win1->SetOnKeyboardfunc(Keyboard);
+    win1->SetOnResizefunc(Resize);
+
+    window.AddWindow(win1);
+
+    while (window.Closed())
+    {
+        window.Process();
+
+        window.Draw();
+        window.PollEvent();
+    }
 }
 
 //int main()
 //{
-//    GLWindow window;
-//
-//    Window *win1 = new Window("Easingenz", 100, 100);
-//    win1->SetOnDrawfunc(Draw);
-//    win1->SetOnCreatedfunc(Create);
-//    win1->SetOnMouseButtonfunc(MouseButton);
-//    win1->SetProcessfunc(Process);
-//    win1->SetOnKeyboardfunc(Keyboard);
-//    win1->SetOnResizefunc(Resize);
-//
-//    window.AddWindow(win1);
-//
-//    while (window.Closed())
+//    for (float i = 0; i < 1; i+=0.01)
 //    {
-//        window.Process();
-//
-//        window.Draw();
-//        window.PollEvent();
+//        float o = EaseOutBack(i);
+//        printf("%f\n", o);
 //    }
+//
+//    getchar();
 //}
-
-int main()
-{
-    for (float i = 0; i < 1; i+=0.01)
-    {
-        float o = EaseOutBack(i);
-        printf("%f\n", o);
-    }
-
-    getchar();
-}

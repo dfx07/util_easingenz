@@ -153,6 +153,9 @@
     <ClCompile Include="..\..\..\wingl_famework\modules\include\GLEasing.h" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\wingl_famework\modules\include\GLSp.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
