@@ -13,9 +13,11 @@ float startpox = -300.f;
 float endpox   =  300.f;
 
 
-EasingBack animationBack;
+EasingBounce animationBack;
 
 EasingBase* animation;
+
+Combobox* cbb;
 
 
 bool bCheck = false;
@@ -26,6 +28,7 @@ MenuContext* menucontext;
 void btnclick(Window* win, Button* mn)
 {
     animationBack.Start();
+    cout << cbb->GetSelectIndex() << endl;
 }
 
 
@@ -50,10 +53,20 @@ void Create(Window* win)
     btn->SetLabel("Click");
 
 
+    cbb = new Combobox(200, 0, 200, 300);
+    cbb->TextEdit(false);
+
+    cbb->AddItem("gia tri 1");
+    cbb->AddItem("gia tri 2");
+    cbb->AddItem("gia tri 3");
+
+    cbb->SetSelect(4);
+
     animationBack.Setup(EaseMode::Out, startpox, endpox, 2.f);
     animation = &animationBack;
 
     win->AddControl(btn);
+    win->AddControl(cbb);
 }
 
 void MouseButton(Window* win)
