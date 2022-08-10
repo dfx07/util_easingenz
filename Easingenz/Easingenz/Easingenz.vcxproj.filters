@@ -21,12 +21,12 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\wingl_famework\modules\include\GLEasing.h">
+    <ClCompile Include="..\..\..\wingl_framework\modules\include\GLEasing.h">
       <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\wingl_famework\modules\include\GLSp.h">
+    <ClInclude Include="..\..\..\wingl_framework\modules\include\GLSp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
